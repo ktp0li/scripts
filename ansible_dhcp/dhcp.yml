@@ -1,0 +1,5 @@
+---
+- hosts: client1
+  tasks: 
+  - name: Show host's int
+    command: ip a 
