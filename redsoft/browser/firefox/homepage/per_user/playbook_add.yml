@@ -1,0 +1,23 @@
+---
+
+-  name: Change homepage
+   gather_facts: no
+   hosts: all
+   vars_files: external_vars.yml
+   tasks:
+     - name: find profile directory
+       find:
+         paths: /home/{{ user }}/.mozilla/firefox/
+         patterns: '*default-default'
+         file_type: directory
+       register: profile_dir
+
+     - name: add firefox homepage
+       lineinfile:
+         dest: "{{ profile_dir | community.general.json_query('files[].path') | join('') }}/user.js"
+         create: yes
+         line: 'user_pref("browser.startup.homepage", "{{ url }}");'
+
+   # дебаг, можно закомментить
+     - debug: 
+         msg: "dir to profile is {{ profile_dir | community.general.json_query('files[].path') | join('') }}"

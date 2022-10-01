@@ -1,0 +1,15 @@
+-  name: Restrict change settings
+   gather_facts: no
+   hosts: all
+   tasks:
+      - name: remove restrictive policies
+        lineinfile:
+          backup: yes
+          dest: /usr/lib64/firefox/distribution/policies.json
+          state: absent
+          regexp: '{{ item }}'
+        loop:
+          -  '"BlockAboutAddons": true,'
+          -  '"BlockAboutConfig": true,'
+          -  '"BlockAboutProfiles": true,'
+          -  '"BlockAboutSupport": true,'

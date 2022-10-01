@@ -1,0 +1,24 @@
+---
+
+-  name: Change homepage
+   gather_facts: no
+   hosts: all
+   vars_files: external_vars.yml
+   tasks:
+      - name: find profile directory
+        find:
+          paths: /home/{{ user }}/.mozilla/firefox/
+          patterns: '*default-default'
+          file_type: directory
+        register: profile_dir
+
+      - name: remove firefox homepage
+        lineinfile:
+          backup: yes
+          dest: "{{ profile_dir | community.general.json_query('files[].path') | join('') }}/user.js"
+          regexp: 'browser.startup.homepage'
+          state: absent
+
+# дебаг, можно закомментить
+      - debug: 
+          msg: "dir to profile is {{ profile_dir | community.general.json_query('files[].path') | join('') }}"

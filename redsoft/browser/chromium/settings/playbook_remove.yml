@@ -1,0 +1,8 @@
+-  name: Restrict change settings
+   gather_facts: no
+   hosts: all
+   tasks:
+      - name: remove restrictive policies
+        ansible.builtin.file:
+          path: /etc/chromium/policies/managed/settings_policies.js
+          state: absent

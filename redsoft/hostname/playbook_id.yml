@@ -1,0 +1,36 @@
+---
+
+-  name: Change hostname
+   gather_facts: no
+   hosts: all
+   vars:
+     crc32_pkg: perl-Archive-Zip
+   tasks:
+     - name: find serial
+       shell: cat /sys/class/dmi/id/product_uuid 
+       register: serial_num
+
+     - name: install the latest version of {{ crc32_pkg }}
+       yum:
+        name: "{{ crc32_pkg }}"
+        state: latest
+
+     - name: generate hostname
+       shell: crc32 <(echo '{{ serial_num.stdout }}')
+       args:
+         executable: /bin/bash
+       register: id_hostname
+
+     - name: change hostname to id
+       hostname:
+         name: "{{ id_hostname.stdout }}"
+         use: systemd
+
+#    дебаг, можно закомментить
+     - shell: hostname
+       register: final_hostname
+
+     - debug: 
+         msg:
+           - "serial number is {{ serial_num.stdout }}"
+           - "hostname is {{ final_hostname.stdout }}"

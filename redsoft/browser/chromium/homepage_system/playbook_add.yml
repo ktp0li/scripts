@@ -1,0 +1,11 @@
+-  name: Change homepage
+   gather_facts: no
+   hosts: all
+   vars_files: external_vars.yml
+   tasks:
+      - name: add chromium homepage
+        lineinfile:
+          backup: yes
+          dest: /usr/lib64/chromium-browser/chromium-browser.sh
+          line: '                        --homepage {{ url }} \'
+          insertafter: 'CHROMIUM_DISTRO_FLAGS='

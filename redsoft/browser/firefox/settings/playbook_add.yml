@@ -1,0 +1,20 @@
+-  name: Restrict change settings
+   gather_facts: no
+   hosts: all
+   tasks:
+      - name: create restrictive policies
+        blockinfile:
+          dest: /usr/lib64/firefox/distribution/policies.json
+          backup: yes
+          insertafter: '"policies": {'
+          block: |
+            "BlockAboutAddons": true,
+            "BlockAboutConfig": true,
+            "BlockAboutProfiles": true,
+            "BlockAboutSupport": true,
+
+      - name: remove blockinfile markers
+        lineinfile:
+          path: /usr/lib64/firefox/distribution/policies.json
+          state: absent
+          regexp: '^#'

@@ -1,0 +1,22 @@
+-  name: Change homepage
+   gather_facts: no
+   hosts: all
+   vars_files: external_vars.yml
+   tasks:
+      - name: change homepage
+        lineinfile:
+          path: /usr/lib64/firefox/distribution/policies.json
+          regexp: '"URL":'
+          insertafter: '"Homepage": {'
+          line: '      "URL": "http://{{ url }}",'
+
+      - name: lock homepage
+        lineinfile:
+          path: /usr/lib64/firefox/distribution/policies.json
+          regexp: '"Locked":'
+          insertafter: '"Homepage": {'
+          line: '      "Locked": true,'
+
+
+
+

@@ -1,0 +1,26 @@
+---
+
+-  name: Change hostname
+   gather_facts: no
+   hosts: all
+   vars:
+     crc32_pkg: perl-Archive-Zip
+   tasks:
+     - name: find serial
+       shell: cat /sys/class/dmi/id/product_uuid 
+       register: serial_num
+
+     - name: change hostname to serial
+       hostname:
+         name: "{{ serial_num.stdout }}"
+         use: systemd
+
+
+#    дебаг, можно закомментить
+     - shell: hostname
+       register: final_hostname
+
+     - debug: 
+         msg:
+           - "serial number is {{ serial_num.stdout }}"
+           - "hostname is {{ final_hostname.stdout }}"

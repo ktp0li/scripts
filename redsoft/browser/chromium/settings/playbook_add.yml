@@ -1,0 +1,18 @@
+-  name: Restrict change settings
+   gather_facts: no
+   hosts: all
+   tasks:
+      - name: create restrictive policies
+        blockinfile:
+          dest: /etc/chromium/policies/managed/settings_policies.js
+          create: yes
+          block: |
+            {
+              "URLBlocklist": ["chrome://flags", "chrome://settings", "chrome://extensions"]
+            }
+
+      - name: remove blockinfile markers
+        lineinfile:
+          path: /etc/chromium/policies/managed/settings_policies.js
+          state: absent
+          regexp: '^#'
